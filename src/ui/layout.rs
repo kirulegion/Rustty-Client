@@ -20,6 +20,7 @@ pub fn method(f : &mut Frame) {
     f.render_widget(widget, area);
 }
 
+
 pub fn url(f : &mut Frame) {
     let area = Rect::new(36,2,f.size().width - 40,4);
     let widget = Block::new()
@@ -38,29 +39,6 @@ pub fn work_space(f : &mut Frame) {
         .title_alignment(Alignment::Center)
         .border_type(BorderType::Rounded)
         .title("Workspace [W]");
-
-    f.render_widget(widget, area);
-}
-
-pub fn features(f : &mut Frame) {
-    let area = Rect::new(36,6,f.size().width-40, 15);
-    let widget = Block::new()
-        .borders(Borders::all())
-        .title_alignment(Alignment::Center)
-        .border_type(BorderType::Rounded)
-        .title("features");
-
-    f.render_widget(widget, area);
-}
-
-
-pub fn response(f : &mut Frame) {
-    let area = Rect::new(36,21,f.size().width-40, f.size().height-7);
-    let widget = Block::new()
-        .borders(Borders::all())
-        .title_alignment(Alignment::Center)
-        .border_type(BorderType::Rounded)
-        .title("Response");
 
     f.render_widget(widget, area);
 }
