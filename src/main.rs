@@ -1,5 +1,5 @@
 use color_eyre::eyre::Result;
-use ratatui::{crossterm::event::{self, Event, KeyCode}, layout::Rect, widgets::{block::title, Block}, DefaultTerminal, Frame};
+use ratatui::{crossterm::event::{self, Event}, DefaultTerminal, Frame};
 
 //Importing all the folder and file struct
 mod state;
@@ -7,7 +7,7 @@ mod network;
 mod ui;
 mod utils;
 mod App;
-
+mod events;
 
 fn main()->Result<()> {
     color_eyre::install()?;
@@ -33,13 +33,12 @@ fn run (mut terminal : DefaultTerminal) -> Result<()> {
     Ok(())
 }
 
-fn render(frame : &mut Frame) {
-
-    //creating costume area for the methods and request history block
-    let meth_req_area = Rect::new(1 , 1, 30 , frame.size().height);
-    let (meth_block , request_history) = ui::layout::layout_one(meth_req_area);
-    frame.render_widget(Block::bordered().title("Method"), meth_block);
-    frame.render_widget(Block::bordered().title("Requests"), request_history);
-
-    
+//Rednering all the ui elements.
+fn render(f : &mut Frame ) {
+    ui::layout::base(f);
+    ui::layout::method(f);
+    ui::layout::work_space(f);
+    ui::layout::url(f);
+    ui::layout::features(f);
+    ui::layout::response(f);
 }
