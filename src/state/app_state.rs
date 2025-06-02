@@ -35,3 +35,27 @@ impl App_state {
         }
     }
 }
+
+impl Methods {
+    pub fn all() -> &'static [Methods] {
+        &[
+            Methods::GET,
+            Methods::POST,
+            Methods::PUT,
+            Methods::PATCH,
+            Methods::DELETE,
+        ]
+    }
+
+    pub fn next(self) -> Self {
+        let list = Self::all();
+        let idx = list.iter().position(|&m| m == self).unwrap();
+        *list.get((idx + 1) % list.len()).unwrap()
+    }
+
+    pub fn prev(self) -> Self {
+        let list = Self::all();
+        let idx = list.iter().position(|&m| m == self).unwrap();
+        *list.get((idx + list.len() - 1) % list.len()).unwrap()
+    }
+}
