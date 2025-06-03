@@ -22,6 +22,7 @@ pub struct App_state {
     pub method: Methods,
     pub mehtod_id: i8,
     pub focused: Focused,
+    pub selected_tab: u8,
 }
 
 impl App_state {
@@ -32,6 +33,7 @@ impl App_state {
             method: Methods::GET,
             focused: Focused::Normal,
             mehtod_id: 0,
+            selected_tab: 0,
         }
     }
 }
