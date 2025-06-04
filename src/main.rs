@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use color_eyre::eyre::Result;
-use events::handler::{handle_method, handle_modes, handle_url};
+use events::handler::{handle_features, handle_method, handle_modes, handle_url};
 use ratatui::{
     crossterm::event::{self, Event},
     DefaultTerminal, Frame,
@@ -51,6 +51,9 @@ pub fn handler_key_events(app_state: &mut App_state) -> Result<()> {
             }
             Focused::Method => {
                 handle_method(key, app_state);
+            }
+            Focused::Feature => {
+                handle_features(key, app_state);
             }
             _ => {}
         }

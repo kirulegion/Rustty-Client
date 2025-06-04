@@ -16,6 +16,12 @@ pub fn handle_modes(key: KeyEvent, state: &mut App_state) {
         (Focused::Normal, event::KeyCode::Char('M')) => {
             state.focused = Focused::Method;
         }
+        (Focused::Normal, event::KeyCode::Char('F')) => {
+            state.focused = Focused::Feature;
+        }
+        (Focused::Normal, event::KeyCode::Char('W')) => {
+            state.focused = Focused::Workspace;
+        }
         //Entry normal mode when ESC is pressed.
         (_, event::KeyCode::Esc) => {
             state.focused = Focused::Normal;
@@ -43,6 +49,22 @@ pub fn handle_method(key: KeyEvent, state: &mut App_state) {
         }
         (KeyCode::Up, Focused::Method) => {
             state.method = state.method.prev();
+        }
+        _ => {}
+    }
+}
+
+pub fn handle_features(key: KeyEvent, state: &mut App_state) {
+    match (key.code, state.focused) {
+        (KeyCode::Right, Focused::Feature) => {
+            if state.selected_tab < 2 {
+                state.selected_tab = state.selected_tab + 1;
+            }
+        }
+        (KeyCode::Left, Focused::Feature) => {
+            if state.selected_tab > 0 {
+                state.selected_tab = state.selected_tab - 1;
+            }
         }
         _ => {}
     }
