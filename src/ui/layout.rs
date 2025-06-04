@@ -113,12 +113,21 @@ pub fn features(f: &mut Frame, state: &mut App_state) {
         )
         .style(Style::default().fg(Color::White));
 
-    f.render_widget(tabs, chunks[0]);
-
     let inner_block = Block::default()
         .borders(Borders::ALL)
         .title_alignment(Alignment::Center)
         .border_type(BorderType::Rounded);
+
+    let is_focused = matches!(state.focused, Focused::Feature);
+
+    f.render_widget(
+        if is_focused {
+            tabs.select(state.selected_tab as usize)
+        } else {
+            tabs.select(None)
+        },
+        chunks[0],
+    );
     match state.selected_tab {
         0 => {
             let content = Paragraph::new("").block(inner_block.title("Param"));
