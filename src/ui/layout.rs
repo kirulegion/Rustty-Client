@@ -1,15 +1,18 @@
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{
-        Color::{self, Rgb},
-        Modifier, Style, Stylize,
+        Color::{self},
+        Modifier, Style,
     },
     text::{Line, Span},
-    widgets::{Block, BorderType, Borders, Padding, Paragraph, Tabs},
+    widgets::{Block, BorderType, Borders, Paragraph, Tabs},
     Frame,
 };
 
-use crate::state::app_state::{App_state, Focused};
+use crate::state::{
+    self,
+    app_state::{App_state, Focused},
+};
 
 pub fn base(f: &mut Frame) {
     let area = Rect::new(3, 1, f.size().width - 5, f.size().height - 1);
@@ -22,14 +25,18 @@ pub fn base(f: &mut Frame) {
 
 pub fn method(f: &mut Frame, state: &mut App_state) {
     let area = Rect::new(5, 2, 30, 5);
-    let block = Block::new()
+    let mut block = Block::new()
         .borders(Borders::all())
         .title_alignment(Alignment::Center)
         .border_type(BorderType::Rounded)
         .title("  Method  ");
 
     let text = format!("{:?}", state.method);
+    let is_focused = matches!(state.focused, Focused::Method);
 
+    if is_focused {
+        block = block.border_style(Style::default().fg(Color::Yellow));
+    }
     // Total lines = 4 (height of area), 1 is content, so 3 left
     // Add 1 empty line before and 2 after (or 2 before and 1 after)
     let lines = vec![
@@ -80,13 +87,22 @@ pub fn work_space(f: &mut Frame, state: &mut App_state) {
         .title_alignment(Alignment::Center)
         .border_type(BorderType::Rounded)
         .title("  Workspace  ");
+    let is_focused = matches!(state.focused, Focused::Workspace);
 
-    f.render_widget(widget, area);
+    f.render_widget(
+        if is_focused {
+            widget.border_style(Style::default().fg(Color::Yellow))
+        } else {
+            widget
+        },
+        area,
+    );
 }
 
 pub fn features(f: &mut Frame, state: &mut App_state) {
     let area = Rect::new(36, 6, f.size().width - 40, 15);
 
+    let is_focused = matches!(state.focused, Focused::Feature);
     let outer_block = Block::new()
         .borders(Borders::ALL)
         .title("  features  ")
@@ -101,7 +117,14 @@ pub fn features(f: &mut Frame, state: &mut App_state) {
         .split(inner_area);
 
     // 1. Render the block
-    f.render_widget(outer_block, area);
+    f.render_widget(
+        if is_focused {
+            outer_block.border_style(Style::default().fg(Color::Yellow))
+        } else {
+            outer_block
+        },
+        area,
+    );
 
     // 2. Render the tab bar
     let tabs = Tabs::new(vec![" Params    ", "    Body    ", "    Headers "])
@@ -118,8 +141,6 @@ pub fn features(f: &mut Frame, state: &mut App_state) {
         .title_alignment(Alignment::Center)
         .border_type(BorderType::Rounded);
 
-    let is_focused = matches!(state.focused, Focused::Feature);
-
     f.render_widget(
         if is_focused {
             tabs.select(state.selected_tab as usize)
@@ -128,6 +149,8 @@ pub fn features(f: &mut Frame, state: &mut App_state) {
         },
         chunks[0],
     );
+
+    //Rendering the tabs according to the selected tabs.
     match state.selected_tab {
         0 => {
             let content = Paragraph::new("").block(inner_block.title("Param"));
@@ -148,6 +171,7 @@ pub fn features(f: &mut Frame, state: &mut App_state) {
 
 pub fn response(f: &mut Frame, state: &mut App_state) {
     let area = Rect::new(36, 21, f.size().width - 40, f.size().height - 22);
+    // let is_focused = matches!(F)
     let widget = Block::new()
         .borders(Borders::all())
         .title_alignment(Alignment::Center)

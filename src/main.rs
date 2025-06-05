@@ -43,7 +43,11 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
 
 pub fn handler_key_events(app_state: &mut App_state) -> Result<()> {
     if let Event::Key(key) = event::read()? {
-        handle_modes(key, app_state);
+        let mode_switch = handle_modes(key, app_state);
+
+        if mode_switch {
+            return Ok(());
+        }
 
         match app_state.focused {
             Focused::Url => {
@@ -55,6 +59,7 @@ pub fn handler_key_events(app_state: &mut App_state) -> Result<()> {
             Focused::Feature => {
                 handle_features(key, app_state);
             }
+            Focused::Workspace => {}
             _ => {}
         }
     }

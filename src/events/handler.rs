@@ -2,31 +2,37 @@ use ratatui::crossterm::event::{self, KeyCode, KeyEvent};
 
 use crate::state::app_state::{App_state, Focused};
 
-pub fn handle_modes(key: KeyEvent, state: &mut App_state) {
+pub fn handle_modes(key: KeyEvent, state: &mut App_state) -> bool {
     match (state.focused, key.code) {
         //Exit the application when q is pressed in normal.
         (Focused::Normal, KeyCode::Char('q')) => {
             state.is_running = false;
+            true
         }
         //Enter the url block to edit or enter the url.
         (Focused::Normal, event::KeyCode::Char('U')) => {
             state.focused = Focused::Url;
+            true
         }
         //Enter the methods selection block.
         (Focused::Normal, event::KeyCode::Char('M')) => {
             state.focused = Focused::Method;
+            true
         }
         (Focused::Normal, event::KeyCode::Char('F')) => {
             state.focused = Focused::Feature;
+            true
         }
         (Focused::Normal, event::KeyCode::Char('W')) => {
             state.focused = Focused::Workspace;
+            true
         }
         //Entry normal mode when ESC is pressed.
         (_, event::KeyCode::Esc) => {
             state.focused = Focused::Normal;
+            true
         }
-        _ => {}
+        _ => false,
     }
 }
 
