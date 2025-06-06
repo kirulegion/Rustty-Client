@@ -8,10 +8,14 @@ use ratatui::{
     widgets::{Block, BorderType, Borders, Paragraph, Tabs},
     Frame,
 };
+use reqwest::Result;
 
-use crate::state::{
-    self,
-    app_state::{App_state, Focused},
+use crate::{
+    network::client::handle_get,
+    state::{
+        self,
+        app_state::{App_state, Focused, Response},
+    },
 };
 
 pub fn base(f: &mut Frame) {
@@ -169,14 +173,17 @@ pub fn features(f: &mut Frame, state: &mut App_state) {
     }
 }
 
-pub fn response(f: &mut Frame, state: &mut App_state) {
+pub fn response(f: &mut Frame, _state: &mut App_state, response: &mut Response) {
     let area = Rect::new(36, 21, f.size().width - 40, f.size().height - 22);
-    // let is_focused = matches!(F)
+
     let widget = Block::new()
         .borders(Borders::all())
         .title_alignment(Alignment::Center)
         .border_type(BorderType::Rounded)
         .title("  Response  ");
 
-    f.render_widget(widget, area);
+    let data = response.body.clone();
+    let paragraph = Paragraph::new(data).block(widget);
+
+    f.render_widget(paragraph, area);
 }

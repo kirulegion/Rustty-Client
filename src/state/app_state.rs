@@ -16,6 +16,17 @@ pub enum Methods {
     DELETE,
 }
 
+#[derive(Default, Clone)]
+pub struct Response {
+    pub body: String,
+}
+impl Response {
+    pub fn new() -> Self {
+        Self {
+            body: "".to_string(),
+        }
+    }
+}
 pub struct App_state {
     pub is_running: bool,
     pub url_input: String,
