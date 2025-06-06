@@ -1,3 +1,5 @@
+use ratatui::text;
+use ratatui::widgets::Wrap;
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{
@@ -5,7 +7,7 @@ use ratatui::{
         Modifier, Style,
     },
     text::{Line, Span},
-    widgets::{Block, BorderType, Borders, Paragraph, Tabs},
+    widgets::{Block, BorderType, Borders, List, ListItem, Paragraph, Tabs},
     Frame,
 };
 use reqwest::Result;
@@ -140,7 +142,7 @@ pub fn features(f: &mut Frame, state: &mut App_state) {
         )
         .style(Style::default().fg(Color::White));
 
-    let inner_block = Block::default()
+    let mut inner_block = Block::default()
         .borders(Borders::ALL)
         .title_alignment(Alignment::Center)
         .border_type(BorderType::Rounded);
@@ -154,15 +156,25 @@ pub fn features(f: &mut Frame, state: &mut App_state) {
         chunks[0],
     );
 
+    //creating the params list
+    let items: Vec<ListItem> = state
+        .params
+        .iter()
+        .map(|(k, v)| ListItem::new(format!("{}: {}", k, v)))
+        .collect();
+
+    // Create the List widget
+    let list = List::new(items).highlight_symbol(">");
+
     //Rendering the tabs according to the selected tabs.
     match state.selected_tab {
         0 => {
-            let content = Paragraph::new("").block(inner_block.title("Param"));
+            let content = Paragraph::new("").block(inner_block.title("Body"));
             f.render_widget(content, chunks[1])
         }
         1 => {
-            let content = Paragraph::new("").block(inner_block.title("Body"));
-            f.render_widget(content, chunks[1]);
+            inner_block = inner_block.title("Param");
+            f.render_widget(list.block(inner_block), chunks[1]);
         }
         2 => {
             let content = Paragraph::new("").block(inner_block.title("Header"));
@@ -175,7 +187,6 @@ pub fn features(f: &mut Frame, state: &mut App_state) {
 
 pub fn response(f: &mut Frame, _state: &mut App_state, response: &mut Response) {
     let area = Rect::new(36, 21, f.size().width - 40, f.size().height - 22);
-
     let widget = Block::new()
         .borders(Borders::all())
         .title_alignment(Alignment::Center)
@@ -186,4 +197,47 @@ pub fn response(f: &mut Frame, _state: &mut App_state, response: &mut Response) 
     let paragraph = Paragraph::new(data).block(widget);
 
     f.render_widget(paragraph, area);
+}
+
+pub fn help_modal(f: &mut Frame, area: Rect) {
+    let help_text = vec![
+        Line::from(vec![Span::styled(
+            "Help - Keybinds",
+            Style::default().add_modifier(Modifier::BOLD),
+        )]),
+        Line::from(""),
+        Line::from("q        - Quit"),
+        Line::from("?        - Toggle Help"),
+        Line::from("Enter    - Submit"),
+        Line::from("↑/↓      - Navigate"),
+    ];
+
+    let paragraph = Paragraph::new(help_text)
+        .block(Block::default().title("Help").borders(Borders::ALL))
+        .wrap(Wrap { trim: true });
+
+    let modal_area = centered_rect(60, 40, area);
+    f.render_widget(paragraph, modal_area);
+}
+
+fn centered_rect(percent_x: u16, percent_y: u16, area: Rect) -> Rect {
+    let vertical = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Percentage((100 - percent_y) / 2),
+            Constraint::Percentage(percent_y),
+            Constraint::Percentage((100 - percent_y) / 2),
+        ])
+        .split(area);
+
+    let horizontal = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([
+            Constraint::Percentage((100 - percent_x) / 2),
+            Constraint::Percentage(percent_x),
+            Constraint::Percentage((100 - percent_x) / 2),
+        ])
+        .split(vertical[1]);
+
+    horizontal[1]
 }
