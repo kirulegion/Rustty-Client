@@ -1,6 +1,10 @@
 use ratatui::crossterm::event::{self, KeyCode, KeyEvent};
+use reqwest::{ Result};
 
-use crate::state::app_state::{App_state, Focused};
+use crate::{
+    network::client::handle_get,
+    state::app_state::{App_state, Focused, Response},
+};
 
 pub fn handle_modes(key: KeyEvent, state: &mut App_state) -> bool {
     match (state.focused, key.code) {
@@ -9,6 +13,7 @@ pub fn handle_modes(key: KeyEvent, state: &mut App_state) -> bool {
             state.is_running = false;
             true
         }
+        
         //Enter the url block to edit or enter the url.
         (Focused::Normal, event::KeyCode::Char('U')) => {
             state.focused = Focused::Url;
@@ -75,3 +80,19 @@ pub fn handle_features(key: KeyEvent, state: &mut App_state) {
         _ => {}
     }
 }
+
+
+pub async fn handle_request_processing(
+    key: KeyEvent,
+    state: &mut App_state,
+    response: &mut Response) -> Result<()> {
+    match (key.code, state.focused) {
+        (KeyCode::Char('R'), Focused::Normal) => {
+            handle_get(state, response).await?; // ✅ propagate error if any
+        }
+        _ => {}
+    }
+
+    Ok(())
+}
+
