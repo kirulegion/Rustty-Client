@@ -8,12 +8,12 @@
 
 - [Introduction](#introduction)
 - [Preview](#Preview)
-- [Features](#✨-Features)
-- [Prerequisites](#Prerequisites-Installation-Guide)
-- [Installation](#Installation)
-- [Deploy / Development Setup](#Deploy-&-Technologies)
-- [Project Structure](#Project-Structure)
-- [Usage](#usage)
+- [Features](#-Features)
+- [Prerequisites](#-Prerequisites-Installation-Guide)
+- [Installation](#-Installation)
+- [Deploy / Development Setup](#-Deploy-&-Technologies)
+- [Project Structure](#-Project-Structure)
+- [Usage](#-usage)
 
 - [Keyboard Shortcuts](#keyboard-shortcuts)
 - [Documentation](#documentation)
