@@ -8,7 +8,7 @@
 
 - [Introduction](#introduction)
 - [Preview](#Preview)
-- [Features](#Features)
+- [Features](#✨-Features)
 - [Prerequisites](#Prerequisites-Installation-Guide)
 - [Installation](#Installation)
 - [Deploy / Development Setup](#Deploy-&-Technologies)
